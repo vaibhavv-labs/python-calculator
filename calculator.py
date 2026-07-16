@@ -1,9 +1,9 @@
 import tkinter as tk
 from tkinter import font as tkfont
 
-# ─────────────────────────────────────────────
+
 #  CALCULATOR LOGIC
-# ─────────────────────────────────────────────
+
 
 class Calculator:
     def __init__(self):
@@ -58,13 +58,13 @@ class Calculator:
                 return
             result = a / b
 
-        # Format result nicely
+      
         if result == int(result) and abs(result) < 1e12:
             result_str = str(int(result))
         else:
             result_str = f"{result:.10g}"
 
-        # Save to history
+   
         op_symbol = self.operator
         entry = f"{self.format_num(a)} {op_symbol} {self.format_num(b)} = {result_str}"
         self.history.insert(0, entry)
@@ -107,12 +107,10 @@ class Calculator:
         return f"{n:.6g}"
 
 
-# ─────────────────────────────────────────────
-#  GUI
-# ─────────────────────────────────────────────
+──
 
 class CalculatorApp:
-    # Color palette
+ 
     BG_DARK       = "#0d1117"
     BG_DISPLAY    = "#161b22"
     BG_CARD       = "#1c2128"
@@ -148,45 +146,45 @@ class CalculatorApp:
         self.root.geometry("380x650")
         self.root.resizable(False, False)
         self.root.configure(bg=self.BG_DARK)
-        # Center on screen
+ 
         self.root.eval('tk::PlaceWindow . center')
 
     def build_ui(self):
-        # Fonts
+    
         self.font_result  = tkfont.Font(family="Courier New", size=42, weight="bold")
         self.font_expr    = tkfont.Font(family="Courier New", size=13)
         self.font_btn     = tkfont.Font(family="Segoe UI", size=18, weight="bold")
         self.font_btn_sm  = tkfont.Font(family="Segoe UI", size=14)
         self.font_hist    = tkfont.Font(family="Courier New", size=10)
 
-        # ── Display ──────────────────────────────
+       
         display_frame = tk.Frame(self.root, bg=self.BG_DISPLAY,
                                  highlightbackground=self.BORDER,
                                  highlightthickness=1)
         display_frame.pack(fill="x", padx=12, pady=(16, 0))
 
-        # Expression label (top, small)
+)
         self.expr_label = tk.Label(display_frame, text="", font=self.font_expr,
                                    bg=self.BG_DISPLAY, fg=self.TEXT_MUTED,
                                    anchor="e", padx=16, pady=12)
         self.expr_label.pack(fill="x", pady=(12, 0))
 
-        # Main result
+      
         self.result_label = tk.Label(display_frame, text="0", font=self.font_result,
                                      bg=self.BG_DISPLAY, fg=self.TEXT_WHITE,
                                      anchor="e", padx=16, pady=4)
         self.result_label.pack(fill="x")
 
-        # History
+   
         self.history_frame = tk.Frame(display_frame, bg=self.BG_DISPLAY)
         self.history_frame.pack(fill="x", padx=16, pady=(4, 12))
 
-        # ── Buttons ───────────────────────────────
+  ──────
         btn_frame = tk.Frame(self.root, bg=self.BG_DARK)
         btn_frame.pack(fill="both", expand=True, padx=12, pady=12)
 
         layout = [
-            # (label, action, colspan, style)
+     )
             [("AC", "clear",  1, "clr"), ("+/−", "sign",    1, "fn"),
              ("%",  "pct",    1, "fn"),  ("÷",   "÷",       1, "op")],
             [("7",  "7",      1, "num"), ("8",   "8",       1, "num"),
@@ -226,7 +224,7 @@ class CalculatorApp:
                 btn.bind("<Leave>", lambda e, b=btn, c=bg:  b.config(bg=c))
                 col_idx += colspan
 
-        # Make grid cells expand evenly
+  
         for c in range(4):
             btn_frame.columnconfigure(c, weight=1)
         for r in range(5):
@@ -241,7 +239,7 @@ class CalculatorApp:
         elif action == "pct":
             c.percentage()
         elif action in ("÷", "×", "+", "-"):
-            # Map display symbol to operator
+         
             op_map = {"÷": "÷", "×": "×", "+": "+", "-": "-"}
             c.input_operator(op_map[action])
         elif action == "=":
@@ -256,20 +254,20 @@ class CalculatorApp:
 
     def refresh(self):
         c = self.calc
-        # Result
+
         txt = c.current
         size = 42 if len(txt) <= 10 else (30 if len(txt) <= 14 else 22)
         self.result_label.config(text=txt,
                                  font=tkfont.Font(family="Courier New", size=size, weight="bold"))
 
-        # Expression
+      
         op_show = {"÷": "÷", "×": "×", "+": "+", "-": "−", None: ""}
         if c.operator and c.previous:
             self.expr_label.config(text=f"{c.previous}  {op_show.get(c.operator,'')}")
         else:
             self.expr_label.config(text="")
 
-        # History
+  
         for w in self.history_frame.winfo_children():
             w.destroy()
         for entry in c.history[:3]:
@@ -306,9 +304,6 @@ class CalculatorApp:
             self.on_press("pct")
 
 
-# ─────────────────────────────────────────────
-#  ENTRY POINT
-# ─────────────────────────────────────────────
 
 if __name__ == "__main__":
     root = tk.Tk()
